@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -9,33 +10,38 @@ const UserSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, "Email harus diisi"],
-      unique: true, // Email tidak boleh kembar di database
+      unique: true,
       lowercase: true,
     },
     password: {
       type: String,
       required: [true, "Password harus diisi"],
     },
-    age: Number,
+    age: { type: Number },
     gender: {
       type: String,
       enum: ["Laki-laki", "Perempuan"],
     },
-    height: Number, // dalam cm
-    weight: Number, // dalam kg
+    height: { type: Number }, // dalam cm
+    weight: { type: Number }, // dalam kg
+    activityLevel: {
+      type: String,
+      enum: ["sedentary", "light", "moderate", "active", "very_active"],
+      default: "sedentary",
+    },
   },
-  {
-    timestamps: true, // Otomatis membuat kolom createdAt dan updatedAt
-  },
+  { timestamps: true },
 );
 
-UserSchema.pre("save", async function (next) {
-  // Jika field password tidak dimodifikasi (misal hanya update data berat badan), lewati hashing
-  if (!this.isModified("password")) return next();
-
-  // Proses enkripsi password menggunakan salt round 10
+// Pre-save hook: enkripsi password sebelum disimpan
+UserSchema.pre("save", async function () {
+  if (!this.isModified("password")) return;
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
+
+// Method untuk membandingkan password saat login
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
 
 export default mongoose.model("User", UserSchema);

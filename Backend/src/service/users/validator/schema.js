@@ -1,46 +1,30 @@
 import Joi from "joi";
 
-// 1. Skema Validasi untuk Register
-export const registerValidation = Joi.object({
-  name: Joi.string().min(3).required().messages({
-    "string.empty": "Nama tidak boleh kosong",
+export const updateProfileValidation = Joi.object({
+  name: Joi.string().min(3).optional().messages({
     "string.min": "Nama minimal harus {#limit} karakter",
   }),
-  email: Joi.string().email().required().messages({
-    "string.empty": "Email tidak boleh kosong",
+  email: Joi.string().email().optional().messages({
     "string.email": "Format email tidak valid",
   }),
-  password: Joi.string().min(6).required().messages({
-    "string.empty": "Password tidak boleh kosong",
-    "string.min": "Password minimal harus {#limit} karakter",
+  age: Joi.number().integer().min(10).max(120).optional().messages({
+    "number.base": "Usia harus berupa angka",
   }),
-  confirmPassword: Joi.any().equal(Joi.ref("password")).required().messages({
-    "any.only": "Konfirmasi password tidak cocok dengan password",
-    "any.required": "Konfirmasi password wajib diisi",
+  gender: Joi.string().valid("Laki-laki", "Perempuan").optional().messages({
+    "any.only": "Gender harus Laki-laki atau Perempuan",
   }),
-  // Validasi data fisik untuk kebutuhan rumus Mifflin-St Jeor:
-  // age: Joi.number().integer().min(1).max(120).required().messages({
-  //   "number.base": "Usia harus berupa angka",
-  //   "number.min": "Usia tidak valid",
-  // }),
-  // gender: Joi.string().valid("Laki-laki", "Perempuan").required().messages({
-  //   "any.only": "Gender harus Laki-laki atau Perempuan",
-  // }),
-  // height: Joi.number().positive().required().messages({
-  //   "number.base": "Tinggi badan harus berupa angka",
-  // }),
-  // weight: Joi.number().positive().required().messages({
-  //   "number.base": "Berat badan harus berupa angka",
-  // }),
-});
-
-// 2. Skema Validasi untuk Login
-export const loginValidation = Joi.object({
-  email: Joi.string().email().required().messages({
-    "string.empty": "Email tidak boleh kosong",
-    "string.email": "Format email tidak valid",
+  height: Joi.number().positive().optional().messages({
+    "number.base": "Tinggi badan harus berupa angka positif",
   }),
-  password: Joi.string().required().messages({
-    "string.empty": "Password tidak boleh kosong",
+  weight: Joi.number().positive().optional().messages({
+    "number.base": "Berat badan harus berupa angka positif",
   }),
+  activityLevel: Joi.string()
+    .valid("sedentary", "light", "moderate", "active", "very_active")
+    .optional()
+    .messages({
+      "any.only": "Level aktivitas tidak valid",
+    }),
+}).min(1).messages({
+  "object.min": "Minimal satu field harus diisi untuk update profil",
 });
