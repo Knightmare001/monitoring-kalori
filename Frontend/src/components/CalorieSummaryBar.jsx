@@ -1,10 +1,3 @@
-/**
- * CalorieSummaryBar — perbaikan:
- * 1. Hapus baris "TDEE 2.357 + 🔥 793 kkal olahraga" yang kelihatan seperti debug log
- * 2. Ganti dengan label-label kecil terstruktur yang rapi
- * 3. Ganti emoji 🔥 dengan ikon Flame dari lucide-react
- * 4. Ganti ⚠ dengan ikon AlertTriangle
- */
 import { Flame, Info, AlertTriangle } from "lucide-react";
 import { useState } from "react";
 
@@ -22,13 +15,12 @@ export default function CalorieSummaryBar({ data }) {
   return (
     <div className="card px-5 py-4">
       <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
-        {/* Kiri: Target kalori + info button */}
+        {/* Kiri: Kalori Tersisa — sekarang jadi sorotan utama */}
         <div>
           <div className="flex items-center gap-1.5 mb-0.5">
             <p className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
-              Total Kalori yang dibutuhkan hari ini
+              {over ? "Kalori melebihi target" : "Kalori tersisa untuk dimakan"}
             </p>
-            {/* Info button — toggle breakdown formula */}
             {caloriesBurned > 0 && (
               <button
                 onClick={() => setShowInfo((v) => !v)}
@@ -39,8 +31,11 @@ export default function CalorieSummaryBar({ data }) {
               </button>
             )}
           </div>
-          <p className="text-3xl font-bold text-slate-800 dark:text-white tracking-tight">
-            {Math.round(effective).toLocaleString("id-ID")}
+          <p
+            className={`text-3xl font-bold tracking-tight ${over ? "text-red-500 dark:text-red-400" : "text-slate-800 dark:text-white"}`}
+          >
+            {over && "−"}
+            {Math.abs(Math.round(remainingKal)).toLocaleString("id-ID")}
             <span className="text-base font-normal text-slate-400 ml-1">kkal</span>
           </p>
 
@@ -48,14 +43,14 @@ export default function CalorieSummaryBar({ data }) {
           {showInfo && caloriesBurned > 0 && (
             <div className="mt-2 flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-700/50 rounded-lg px-2.5 py-1.5 w-fit">
               <span>TDEE {Math.round(tdee).toLocaleString("id-ID")} kkal</span>
-              <span className="text-slate-300 dark:text-slate-600">+</span>
+              <span className="text-slate-300 dark:text-slate-600">−</span>
               <Flame size={11} className="text-orange-400" />
               <span className="text-orange-500 dark:text-orange-400 font-medium">{caloriesBurned} kkal olahraga</span>
             </div>
           )}
         </div>
 
-        {/* Kanan: Stats grid */}
+        {/* Kanan: Stats grid — Target dipindah ke sini, di samping Dikonsumsi & Terbakar */}
         <div className="flex gap-5 flex-wrap">
           <Stat
             label="Dikonsumsi"
@@ -72,13 +67,6 @@ export default function CalorieSummaryBar({ data }) {
               icon={<Flame size={13} className="text-orange-400" />}
             />
           )}
-          <Stat
-            label={over ? "Kelebihan" : "Tersisa"}
-            value={Math.abs(Math.round(remainingKal))}
-            unit="kkal"
-            colorClass={over ? "text-red-500 dark:text-red-400" : "text-emerald-600 dark:text-emerald-400"}
-            prefix={over ? "−" : "+"}
-          />
         </div>
       </div>
 

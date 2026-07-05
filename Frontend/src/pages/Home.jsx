@@ -12,10 +12,6 @@ export default function Home() {
 
       {/* 2. Hero Section */}
       <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16 text-center flex flex-col items-center gap-6">
-        <div className="inline-flex items-center gap-2 bg-slate-200/80 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700/50 rounded-full px-4 py-1.5 text-xs font-medium text-emerald-600 dark:text-emerald-400 backdrop-blur">
-          ✨ Aplikasi Tugas Akhir Penulisan Ilmiah
-        </div>
-
         <h1 className="text-4xl sm:text-6xl font-black tracking-tight text-slate-900 dark:text-slate-100 max-w-3xl leading-[1.15]">
           Pantau Nutrisimu, Raih{" "}
           <span className="bg-gradient-to-r from-emerald-500 to-teal-500 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">
@@ -43,9 +39,9 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 bg-white dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800/80 rounded-3xl p-6 backdrop-blur shadow-sm dark:shadow-none">
           {[
-            { number: "100%", label: "Akurat & Personalisasi" },
+            { number: "99%", label: "Akurat & Personalisasi" },
             { number: "Real-time", label: "Sinkronisasi Data" },
-            { number: "Mifflin", label: "Formula Standar BMR" },
+            { number: "Mifflin-St Jeor", label: "Formula Standar BMR" },
           ].map((item, idx) => (
             <div key={idx} className="text-center p-2 border-r last:border-0 border-slate-200 dark:border-slate-800/60">
               <p className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">

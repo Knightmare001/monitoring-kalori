@@ -112,13 +112,7 @@ export default function Dashboard() {
           {summary?.bmr && (
             <div className="flex gap-3 text-center">
               <div className="bg-white dark:bg-slate-800 rounded-xl px-3 py-2 border border-slate-100 dark:border-slate-700">
-                <p className="text-xs text-slate-400">BMR</p>
-                <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
-                  {summary.bmr.toLocaleString("id-ID")} kkal
-                </p>
-              </div>
-              <div className="bg-white dark:bg-slate-800 rounded-xl px-3 py-2 border border-slate-100 dark:border-slate-700">
-                <p className="text-xs text-slate-400">TDEE</p>
+                <p className="text-xs text-slate-400">Kebutuhan Kalori Harian</p>
                 <p className="text-sm font-bold text-slate-700 dark:text-slate-200">
                   {summary.tdee?.toLocaleString("id-ID")} kkal
                 </p>

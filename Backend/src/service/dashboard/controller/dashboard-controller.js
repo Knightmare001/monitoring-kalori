@@ -53,16 +53,19 @@ export const getDashboardSummary = async (req, res, next) => {
     const caloriesBurned = todayActivityData.totalCaloriesBurned || 0;
 
     /**
-     * Logika: Olahraga menambah kuota kalori harian.
-     * Effective target = TDEE + kalori terbakar dari olahraga
-     * Remaining = (TDEE + caloriesBurned) - consumed
+     * Logika: Olahraga mengurangi kalori bersih yang dianggap sudah dikonsumsi.
+     * Target (TDEE) tetap utuh, tidak berubah.
+     * Konsumsi bersih = kalori makanan - kalori terbakar olahraga (minimal 0)
+     * Remaining = TDEE - konsumsi bersih
      *
      * Hanya kalori yang dipengaruhi olahraga.
      * Makro (karbo/protein/lemak) tetap dihitung dari target TDEE dasar.
      */
+    const netCaloriesConsumed = Math.max(consumed.calories - caloriesBurned, 0);
+
     const remaining = macroTargets
       ? {
-          calories: Math.round((macroTargets.calories + caloriesBurned - consumed.calories) * 10) / 10,
+          calories: Math.round((macroTargets.calories - netCaloriesConsumed) * 10) / 10,
           carbs: Math.round((macroTargets.carbs - consumed.carbs) * 10) / 10,
           protein: Math.round((macroTargets.protein - consumed.protein) * 10) / 10,
           fat: Math.round((macroTargets.fat - consumed.fat) * 10) / 10,
@@ -80,7 +83,7 @@ export const getDashboardSummary = async (req, res, next) => {
       consumed,
       caloriesBurned, // total kalori terbakar olahraga hari ini
       effectiveCalorieTarget: macroTargets
-        ? macroTargets.calories + caloriesBurned // target kalori efektif (TDEE + olahraga)
+        ? macroTargets.calories // target kalori efektif (TDEE)
         : null,
       remaining,
       todayLogs: todayFoodData.logs,
